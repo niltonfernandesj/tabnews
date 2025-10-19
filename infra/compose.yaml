@@ -1,0 +1,7 @@
+services:
+  datbase:
+    image: "postgres:16.0-alpine3.18"
+    environment:
+      POSTGRES_PASSWORD: "mudar123"
+    ports:
+      - "5432:5432"
