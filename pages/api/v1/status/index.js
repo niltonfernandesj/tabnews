@@ -17,13 +17,11 @@ async function status(request, response) {
 
 async function getPostgresVersion() {
   const query = await database.query("SHOW server_version;");
-
   return query.rows[0].server_version;
 }
 
 async function getPostgresMaxConnections() {
   const query = await database.query("SHOW max_connections;");
-
   return parseInt(query.rows[0].max_connections);
 }
 
@@ -33,6 +31,7 @@ async function getPostgresActiveConnections() {
     text: "SELECT count(*)::int as conexoes_ativas FROM pg_stat_activity WHERE datname = $1;",
     values: [dataBaseName],
   });
+
   return query.rows[0].conexoes_ativas;
 }
 
