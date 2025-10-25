@@ -9,7 +9,6 @@ async function query(queryObject) {
     const result = await client.query(queryObject);
     return result;
   } catch (error) {
-    console.log("Credenciais do Postgres:", clientParameters);
     throw error;
   } finally {
     await client.end();
