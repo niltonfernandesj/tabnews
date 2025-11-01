@@ -2,35 +2,48 @@
 
 import migrationRunner from "node-pg-migrate";
 import { join } from "node:path";
+import database from "infra/database.js";
 
 export default async function migrations(request, response) {
-  const defaultMigrationParameters = getDefaultMigrationParameters();
+  let client;
 
-  if (request.method === "GET") {
-    const pendingMigrations = await migrationRunner(defaultMigrationParameters);
+  try {
+    client = await database.getNewClient();
 
-    return response.status(200).json(pendingMigrations);
-  }
+    const defaultMigrationParameters = getDefaultMigrationParameters(client);
 
-  if (request.method === "POST") {
-    const migratedMigrations = await migrationRunner({
-      ...defaultMigrationParameters,
-      dryRun: false,
-    });
+    if (request.method === "GET") {
+      const pendingMigrations = await migrationRunner(
+        defaultMigrationParameters,
+      );
 
-    if (migratedMigrations.length > 0) {
-      return response.status(201).json(migratedMigrations);
+      return response.status(200).json(pendingMigrations);
     }
 
-    return response.status(200).json(migratedMigrations);
-  }
+    if (request.method === "POST") {
+      const migratedMigrations = await migrationRunner({
+        ...defaultMigrationParameters,
+        dryRun: false,
+      });
 
-  return response.status(405).end();
+      if (migratedMigrations.length > 0) {
+        return response.status(201).json(migratedMigrations);
+      }
+
+      return response.status(200).json(migratedMigrations);
+    }
+
+    return response.status(405).end();
+  } catch (error) {
+    throw error;
+  } finally {
+    await client.end();
+  }
 }
 
-function getDefaultMigrationParameters() {
+function getDefaultMigrationParameters(dbClient) {
   return {
-    databaseUrl: process.env.DATABASE_URL,
+    dbClient: dbClient,
     dir: join("infra", "migrations"),
     direction: "up",
     dryRun: true,
