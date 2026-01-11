@@ -8,7 +8,7 @@ checkPostgres();
 function checkPostgres() {
   exec(
     `docker exec postgres-dev pg_isready --host ${process.env.POSTGRES_HOST}`,
-    (error, stdout, stderr) => {
+    (error, stdout) => {
       if (!stdout.includes("accepting connections")) {
         process.stdout.write(".");
         checkPostgres();
