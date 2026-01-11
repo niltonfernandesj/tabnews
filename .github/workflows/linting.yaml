@@ -20,3 +20,20 @@ jobs:
       - run: npm ci
 
       - run: npm run lint:prettier:check
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      # Action criada pela comunidade para baixar para máquina de CI
+      # o código na versão específica do pull request realizado.
+      - uses: actions/checkout@v4
+
+      # Action criada pela comunidade para definir na máquina de CI
+      # a versão do Node a ser utilizada.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/hydrogen"
+
+      - run: npm ci
+
+      - run: npm run lint:eslint:check
