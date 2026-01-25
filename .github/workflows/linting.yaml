@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           # Altera a configuração padrão da action de checkout que só considera
-          # o último commit realizado, para considerar todos
+          # o último commit realizado, para considerar todos os commits.
           fetch-depth: 0
 
       # Action criada pela comunidade para definir na máquina de CI
