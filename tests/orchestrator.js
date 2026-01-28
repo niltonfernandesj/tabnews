@@ -20,7 +20,7 @@ async function clearDatabase() {
 
 const orchestrator = {
   waitForWebServer,
-  clearDatabase
+  clearDatabase,
 };
 
 export default orchestrator;
